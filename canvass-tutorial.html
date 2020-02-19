@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head></head>
+
+<body>
+  <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;">
+  </canvas>
+
+  <canvas id="canvas2" width="1000" height="1000" style="border:1px solid #000000;">
+  </canvas>
+
+  <script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+
+    //parameters are x coord, y coord, width, height
+    //red rectangle
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(0, 0, 150, 80);
+
+    //circle
+    ctx.beginPath();
+    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    //gradient
+    let grd = ctx.createLinearGradient(0, 0, 150, 0);
+    grd.addColorStop(0, "purple");
+    grd.addColorStop(1, "pink");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 100, 150, 80);
+
+    //text
+    ctx.font = "30px Arial";
+    ctx.fillText("Hello World!", 0, 220);
+
+    //using strokeText()
+    ctx.strokeText("Hello World!", 0, 260);
+
+    //center text
+    ctx.textAlign = "Center";
+    ctx.fillText("Hello World!", canvas.width/2, canvas.height/2);
+
+    //starting canvas 2
+    let canvas2 = document.getElementById("canvas2");
+    let context = canvas2.getContext("2d");
+    context.fillStyle = "rgb(255, 255, 255)";
+    //context.fillStyle = "#000000";
+    context.fillRect(400, 400, 400, 400);
+
+    let grid = [];
+    let numOfElements = 10;
+    let i;
+    let position = [400, 400];
+
+    for(i = 0; i < numOfElements; i++) {
+      grid.push(position);
+      position[0] += 20;
+      position[1] += 20;
+    }
+
+    let red = 255;
+    let green = 255;
+    let blue = 255;
+    grid.forEach(item => {
+      context.fillRect(item[0], item[1], 20, 20);
+      context.fillStyle = `rgb(${red.toString()}, ${green.toString()}, ${blue.toString()})`
+      red = red - 10;
+      green = green - 10;
+      blue = blue - 10;
+    });
+
+
+
+  </script>
+</body>
+
+</html>
