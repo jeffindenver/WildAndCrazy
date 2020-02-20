@@ -30,22 +30,22 @@
       function startTimers() {
 
         setInterval(() => {
+          let step = getRandomNumber([1, 5]);
+          // setTimeout(() => {
+          //   startColorShift("green", step);
+          //   console.log("green shift begun")
+          // }, 0);
+
           setTimeout(() => {
-            startColorShift("red");
-            console.log("red shift begun")
-          }, 0);
-          setTimeout(() => {
-            stopInterval(colorShiftID)
-            console.log("redShift stopped");
-            startColorShift("blue");
+            startColorShift("blue", step);
             console.log("blueShift begun");
           }, 30000);
-        }, 60000);
+        }, 5000);
       }
 
-      function startColorShift(color) {
+      function startColorShift(color, step) {
         let colorShiftID = setInterval(() => {
-          shiftColors(fieldOfColor, color, 2)
+          shiftColors(fieldOfColor, color, step)
         }, 1000);
       }
 
@@ -97,91 +97,95 @@
       context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1])
     }
 
-//this is really nasty code. Refactor to handle the 0-255 range through a setter
+    ColorBlock.prototype.setRed = function (red) {
+      if (red > 255) {
+        this.red = 0;
+      } else {
+        this.red = red;
+      }
+    }
+
+    ColorBlock.prototype.setGreen = function (green) {
+      if (green > 255) {
+        this.green = 0;
+      } else {
+        this.green = green;
+      }
+    }
+
+    ColorBlock.prototype.setBlue = function (blue) {
+      if (blue > 255) {
+        this.blue = 0;
+      } else {
+        this.blue = blue;
+      }
+    }
+
     ColorBlock.prototype.incrementColor = function (aColor, step) {
-        if (aColor = "red") {
-          this.red = this.red + step;
-          if (this.blue > step) {
-            this.blue = this.blue - step;
-          }
-          if (this.green > step) {
-            this.green = this.green - step;
-          }
-          if (this.red > 255) {
-            this.red = 255;
-          }
-        } else if (aColor = "green") {
-          this.green = this.green + step;
+      if (aColor = "red") {
+        this.setRed(this.red + step);
+        this.setGreen(this.green - step);
+        this.setBlue(this.blue - step);
 
-          if (this.red > step) {
-            this.red = this.red - step;
-          }
-          if (this.blue > step) {
-            this.blue = this.blue - step;
-          }
-          if (this.green > 255) {
-            this.green = 255;
-          }
-        } else if (aColor = "blue") {
-          this.blue = this.blue + step;
-          if (this.red > step) {
-            this.red = this.red - step;
-          }
-          if (this.green > step) {
-            this.green = this.green - step;
-          }
-          if (this.blue > 255) {
-            this.blue = 255;
-          }
-        }
-          context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
-          context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
-          context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
-        };
+      } else if (aColor = "green") {
+        this.setRed(this.red - step);
+        this.setGreen(this.green + step);
+        this.setBlue(this.blue + Math.floor(step / 2));
 
-        function shiftColors(anArray, color, step) {
-          anArray.forEach(item => {
-            item.incrementColor(color, step);
-          });
-        }
+      } else if (aColor = "blue") {
+        this.setRed(this.red - step);
+        this.setGreen(this.green - step);
+        this.setBlue(this.blue + step);
+        console.log("blue is " + this.blue);
+      }
+      context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+      context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
+      context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+    };
 
-        /*
-         * params: three 2-element arrays
-         * response: returns a colorSet object
-         * description: color set constructor
-         */
-        function ColorRange(r, g, b) {
-          this.red = r;
-          this.green = g;
-          this.blue = b;
-        }
+    function shiftColors(anArray, color, step) {
+      anArray.forEach(item => {
+        item.incrementColor(color, step);
+      });
+    }
 
-        /*
-         * params: ColorRange object
-         * response: returns a string formatted as an css rgb value
-         * description: generates a rgb color value and formats
-         * for use as a valid style color.
-         */
-        function getRandomColor(colorRange) {
-          r = getRandomNumber(colorRange.red);
-          g = getRandomNumber(colorRange.green);
-          b = getRandomNumber(colorRange.blue);
-          return [r, g, b];
-        }
+    /*
+     * params: three 2-element arrays
+     * response: returns a colorSet object
+     * description: color set constructor
+     */
+    function ColorRange(r, g, b) {
+      this.red = r;
+      this.green = g;
+      this.blue = b;
+    }
 
-        /*
-         * params: a two element array with two integers
-         * response: returns a number between min and max
-         * description: generates random number in a range
-         */
-        function getRandomNumber(range) {
-          let max = range[1];
-          let min = range[0];
-          let diff = max - min;
-          return Math.floor((Math.random() * diff) + min);
-        }
+    /*
+     * params: ColorRange object
+     * response: returns a string formatted as an css rgb value
+     * description: generates a rgb color value and formats
+     * for use as a valid style color.
+     */
+    function getRandomColor(colorRange) {
+      r = getRandomNumber(colorRange.red);
+      g = getRandomNumber(colorRange.green);
+      b = getRandomNumber(colorRange.blue);
+      return [r, g, b];
+    }
 
-        start();
+    /*
+     * params: a two element array with two integers
+     * response: returns a number between min and max
+     * description: generates random number in a range
+     */
+    function getRandomNumber(range) {
+      let max = range[1];
+      let min = range[0];
+      let diff = max - min;
+      return Math.floor((Math.random() * diff) + min);
+    }
+
+    start();
 
   </script>
 </body>
