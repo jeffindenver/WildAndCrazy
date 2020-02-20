@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <style>
+    canvas {
+      margin: auto;
+      background-color: lightgrey;
+      display: block;
+    }
+
+    body {
+      background-color: darkslategray;
+    }
+
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="1000" height="1000"></canvas>
+
+  <script>
+    function start() {
+      let fieldOfColor = [];
+      buildCanvas(fieldOfColor);
+      let interval1 = setInterval(() => {
+        shiftColors(fieldOfColor, "red", 2)
+      }, 1000);
+    }
+
+    const canvas = document.getElementById("myCanvas");
+    const context = canvas.getContext("2d");
+    context.globalCompositeOperation = "source-over";
+    const reds = Object.freeze(new ColorRange([200, 255], [0, 100], [0, 100]));
+    const blues = Object.freeze(new ColorRange([0, 100], [0, 100], [200, 255]));
+    const randomColors = Object.freeze(new ColorRange([0, 255], [0, 255], [0, 255]));
+
+    function buildCanvas(fieldOfColor) {
+      let rowMax = 10;
+      let columnMax = 10;
+      let height = 100;
+      let width = 100;
+      let x = 0;
+      let y = 0;
+
+      for (let i = 0; i < rowMax; i++) {
+        //increment the y coord from 0 to 1000 in steps of 100
+        x = 0; //return to left side of canvas
+        if (i > 0) {
+          y += 100;
+        };
+        for (let j = 0; j < columnMax; j++) {
+          //increment the x coord from 0 to 1000 in steps of 100
+          if (j > 0) {
+            x += 100;
+          };
+          fieldOfColor.push(new ColorBlock(getRandomColor(reds), [x, y], [height, width]));
+        }
+      }
+    }
+
+    function ColorBlock(aColor, coords, dimensions) {
+      this.coords = coords;
+      this.dimensions = dimensions;
+      this.red = aColor[0];
+      this.green = aColor[1];
+      this.blue = aColor[2];
+      context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
+      //x coord, y coord, width, height
+      context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1])
+    }
+
+    ColorBlock.prototype.incrementColor = function (aColor, step) {
+      console.log("increment color called. Starting color is " + this.red.toString());
+      if (aColor = "red") {
+        this.red = this.red + step;
+        if (this.blue > step) {
+          this.blue = this.blue - step;
+        }
+        if (this.green > step) {
+          this.green = this.green - step;
+        }
+        if (this.red > 255) {
+          this.red = 255;
+        }
+      } else if (aColor = "green") {
+        this.green = this.green + step;
+        if (this.green > 255) {
+          this.green = 255;
+        }
+      } else if (aColor = "blue") {
+        this.blue = this.green + step;
+        if (this.blue > 255) {
+          this.blue = 255;
+        }
+      }
+      console.log("After color is " + this.red.toString());
+      console.log("x: " + this.coords[0] + " Y: " + this.coords[1]);
+      context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+      context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
+      context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+    };
+
+    function shiftColors(anArray, color, step) {
+      anArray.forEach(item => {
+        console.log("shiftColors called");
+        item.incrementColor(color, step);
+      });
+    }
+
+    /*
+     * params: three 2-element arrays
+     * response: returns a colorSet object
+     * description: color set constructor
+     */
+    function ColorRange(r, g, b) {
+      this.red = r;
+      this.green = g;
+      this.blue = b;
+    }
+
+    /*
+     * params: ColorRange object
+     * response: returns a string formatted as an css rgb value
+     * description: generates a rgb color value and formats
+     * for use as a valid style color.
+     */
+    function getRandomColor(colorRange) {
+      r = getRandomNumber(colorRange.red);
+      g = getRandomNumber(colorRange.green);
+      b = getRandomNumber(colorRange.blue);
+      return [r, g, b];
+    }
+
+    /*
+     * params: a two element array with two integers
+     * response: returns a number between min and max
+     * description: generates random number in a range
+     */
+    function getRandomNumber(range) {
+      let max = range[1];
+      let min = range[0];
+      let diff = max - min;
+      return Math.floor((Math.random() * diff) + min);
+    }
+
+    start();
+
+  </script>
+</body>
+
+</html>
