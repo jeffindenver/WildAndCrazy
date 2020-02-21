@@ -21,10 +21,13 @@
   <canvas id="myCanvas" width="1000" height="1000"></canvas>
 
   <script>
+    //author Jeff Shepherd
     function start() {
       let fieldOfColor = [];
-      buildCanvas(fieldOfColor);
       let colorShiftID;
+      let rowShiftID;
+
+      buildCanvas(fieldOfColor);
       startTimers();
 
       function startTimers() {
@@ -36,14 +39,14 @@
 
         function startColorShift(color, step) {
           console.log(`${color} shift begun.`);
-          let colorShiftID = setInterval(() => {
+          colorShiftID = setInterval(() => {
             shiftColors(fieldOfColor, color, step);
           }, milliseconds);
         }
 
         function startRowShift() {
           console.log("Row shift begun.");
-          let rowShiftID = setInterval(() => {
+          rowShiftID = setInterval(() => {
             shiftRows(fieldOfColor);
           }, milliseconds);
         }
@@ -57,6 +60,7 @@
     const canvas = document.getElementById("myCanvas");
     const context = canvas.getContext("2d");
     context.globalCompositeOperation = "source-over";
+
     const reds = Object.freeze(new ColorRange([200, 255], [0, 100], [0, 100]));
     const greens = Object.freeze(new ColorRange([0, 100], [200, 255], [0, 100]));
     const blues = Object.freeze(new ColorRange([0, 100], [0, 100], [200, 255]));
@@ -98,6 +102,11 @@
       });
     }
 
+    /*
+     * params: color[3], coords[2], dimensions[2]
+     * response: ColorBlock Object
+     * description: ColorBlock constructor.
+     */
     function ColorBlock(aColor, coords, dimensions) {
       this.coords = coords;
       this.dimensions = dimensions;
@@ -139,6 +148,12 @@
       }
     }
 
+    /*
+     * params: none
+     * response: increments the x coord by 100
+     * description: causes an apparent shift in colors from
+     * left to right with wrap around.
+     */
     ColorBlock.prototype.incrementXCoord = function () {
       xCoord = this.coords[0];
       xCoord = xCoord += 100;
@@ -151,8 +166,7 @@
     /*
      * params: color string and integer step
      * response: increments color values
-     * description: supposed to increment or decrement color values.
-     * Everything is turning red at the moment.
+     * description: changes color values
      */
     ColorBlock.prototype.incrementColor = function (aColor, step) {
       if (aColor = "red") {
@@ -170,6 +184,7 @@
         this.setGreen(this.green - step);
         this.setBlue(this.blue + step);
       }
+      //extract a function "redraw" with the following lines
       context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
       context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
       context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
