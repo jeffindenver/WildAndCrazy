@@ -26,6 +26,7 @@
       let fieldOfColor = [];
       let colorShiftID;
       let rowShiftID;
+      let columnShiftID;
 
       buildCanvas(fieldOfColor);
       startTimers();
@@ -34,8 +35,9 @@
         let step = getRandomNumber([1, 5]);
         let milliseconds = 300;
 
-        startColorShift("blue", step);
-        startRowShift();
+        startColorShift("green", step);
+        //startRowShift();
+        startColumnShift();
 
         function startColorShift(color, step) {
           console.log(`${color} shift begun.`);
@@ -45,9 +47,16 @@
         }
 
         function startRowShift() {
-          console.log("Row shift begun.");
+          console.log("row shift begun.");
           rowShiftID = setInterval(() => {
             shiftRows(fieldOfColor);
+          }, milliseconds);
+        }
+
+        function startColumnShift() {
+          console.log("column shift begun.");
+          columnShiftID = setInterval(() => {
+            shiftColumns(fieldOfColor);
           }, milliseconds);
         }
 
@@ -85,9 +94,15 @@
           if (j > 0) {
             x += 100;
           };
-          fieldOfColor.push(new ColorBlock(getRandomColor(blues), [x, y], [height, width]));
+          fieldOfColor.push(new ColorBlock(getRandomColor(greens), [x, y], [height, width]));
         }
       }
+    }
+
+    function shiftColumns(anArray) {
+      anArray.forEach(item => {
+        item.incrementYCoord();
+      });
     }
 
     function shiftRows(anArray) {
@@ -99,6 +114,7 @@
     function shiftColors(anArray, color, step) {
       anArray.forEach(item => {
         item.incrementColor(color, step);
+        item.redraw();
       });
     }
 
@@ -113,13 +129,14 @@
       this.red = aColor[0];
       this.green = aColor[1];
       this.blue = aColor[2];
+
       context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
       //x coord, y coord, width, height
       context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1])
     }
 
-    ColorBlock.prototype.setRed = function (red) {
-      this.red = red;
+    ColorBlock.prototype.setRed = function (redValue) {
+      this.red = redValue;
       if (this.red > 255) {
         this.red = 0;
       }
@@ -128,8 +145,8 @@
       }
     }
 
-    ColorBlock.prototype.setGreen = function (green) {
-      this.green = green;
+    ColorBlock.prototype.setGreen = function (greenValue) {
+      this.green = greenValue;
       if (this.green > 255) {
         this.green = 0;
       }
@@ -138,8 +155,8 @@
       }
     }
 
-    ColorBlock.prototype.setBlue = function (blue) {
-      this.blue = blue;
+    ColorBlock.prototype.setBlue = function (blueValue) {
+      this.blue = blueValue;
       if (this.blue > 255) {
         this.blue = 0;
       }
@@ -164,6 +181,23 @@
     }
 
     /*
+     * params: none
+     * response: increments the y coord by 100
+     * description: causes an apparent shift in colors from
+     * top to bottom with wrap around.
+     * @ToDo Duplicate code, so refactor to combine
+     * incrementYCoord with incrementXCoord functions.
+     */
+    ColorBlock.prototype.incrementYCoord = function () {
+      yCoord = this.coords[1];
+      yCoord = yCoord += 100;
+      if (yCoord > 900) {
+        yCoord = 0;
+      }
+      this.coords[1] = yCoord;
+    }
+
+    /*
      * params: color string and integer step
      * response: increments color values
      * description: changes color values
@@ -185,10 +219,16 @@
         this.setBlue(this.blue + step);
       }
       //extract a function "redraw" with the following lines
+      // context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+      // context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
+      // context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+    };
+
+    ColorBlock.prototype.redraw = function () {
       context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
       context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
       context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
-    };
+    }
 
     /*
      * params: three 2-element arrays
@@ -203,9 +243,9 @@
 
     /*
      * params: ColorRange object
-     * response: returns a string formatted as an css rgb value
-     * description: generates a rgb color value and formats
-     * for use as a valid style color.
+     * response: returns three color values in an array
+     * description: randomly generates rgb color values,
+     * with the possibility of range restrictions.
      */
     function getRandomColor(colorRange) {
       r = getRandomNumber(colorRange.red);
