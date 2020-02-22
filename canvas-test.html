@@ -218,12 +218,13 @@
         this.setGreen(this.green - step);
         this.setBlue(this.blue + step);
       }
-      //extract a function "redraw" with the following lines
-      // context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
-      // context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
-      // context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
     };
 
+    /*
+     * params: none
+     * response: clears and refills rects on the canvass
+     * description: redraws the color block
+     */
     ColorBlock.prototype.redraw = function () {
       context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
       context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
