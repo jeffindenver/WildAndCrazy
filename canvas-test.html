@@ -109,6 +109,7 @@
     function shiftColumns(anArray) {
       anArray.forEach(item => {
         item.incrementYCoord();
+        item.redraw();
       });
     }
 
@@ -130,45 +131,54 @@
      * response: ColorBlock Object
      * description: ColorBlock constructor.
      */
-    function ColorBlock(aColor, coords, dimensions) {
-      this.coords = coords;
-      this.dimensions = dimensions;
-      this.red = aColor[0];
-      this.green = aColor[1];
-      this.blue = aColor[2];
+    function ColorBlock(colorValues, coords, dimensions) {
+      this.colorValues = {
+        red: colorValues[0],
+        green: colorValues[1],
+        blue: colorValues[2]
+      };
 
-      context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
-      //x coord, y coord, width, height
-      context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1])
+      this.coords = {
+        x: coords[0],
+        y: coords[1]
+      };
+
+      this.dimensions = {
+        width: dimensions[0],
+        height: dimensions[1]
+      };
+
+      context.fillStyle = `rgb(${this.colorValues.red}, ${this.colorValues.green}, ${this.colorValues.blue})`;
+      context.fillRect(this.coords.x, this.coords.y, this.dimensions.width, this.dimensions.height)
     }
 
-    ColorBlock.prototype.setRed = function (redValue) {
-      this.red = redValue;
-      if (this.red > 255) {
-        this.red = 0;
+    ColorBlock.prototype.setRed = function (value) {
+      this.colorValues.red = value;
+      if (this.colorValues.red > 255) {
+        this.colorValues.red = 0;
       }
-      if (this.red < 0) {
-        this.red = 255;
-      }
-    }
-
-    ColorBlock.prototype.setGreen = function (greenValue) {
-      this.green = greenValue;
-      if (this.green > 255) {
-        this.green = 0;
-      }
-      if (this.green < 0) {
-        this.green = 255;
+      if (this.colorValues.red < 0) {
+        this.colorValues.red = 255;
       }
     }
 
-    ColorBlock.prototype.setBlue = function (blueValue) {
-      this.blue = blueValue;
-      if (this.blue > 255) {
-        this.blue = 0;
+    ColorBlock.prototype.setGreen = function (value) {
+      this.colorValues.green = value;
+      if (this.colorValues.green > 255) {
+        this.colorValues.green = 0;
       }
-      if (this.blue < 0) {
-        this.blue = 255;
+      if (this.colorValues.green < 0) {
+        this.colorValues.green = 255;
+      }
+    }
+
+    ColorBlock.prototype.setBlue = function (value) {
+      this.colorValues.blue = value;
+      if (this.colorValues.blue > 255) {
+        this.colorValues.blue = 0;
+      }
+      if (this.colorValues.blue < 0) {
+        this.colorValues.blue = 255;
       }
     }
 
@@ -179,12 +189,12 @@
      * left to right with wrap around.
      */
     ColorBlock.prototype.incrementXCoord = function () {
-      xCoord = this.coords[0];
+      xCoord = this.coords.x;
       xCoord = xCoord += 100;
       if (xCoord > 900) {
         xCoord = 0;
       }
-      this.coords[0] = xCoord;
+      this.coords.x = xCoord;
     }
 
     /*
@@ -196,12 +206,12 @@
      * incrementYCoord with incrementXCoord functions.
      */
     ColorBlock.prototype.incrementYCoord = function () {
-      yCoord = this.coords[1];
+      yCoord = this.coords.y;
       yCoord = yCoord += 100;
       if (yCoord > 900) {
         yCoord = 0;
       }
-      this.coords[1] = yCoord;
+      this.coords.y = yCoord;
     }
 
     /*
@@ -210,20 +220,24 @@
      * description: changes color values
      */
     ColorBlock.prototype.incrementColor = function (aColor, step) {
+      let r = this.colorValues.red;
+      let g = this.colorValues.green;
+      let b = this.colorValues.blue;
+
       if (aColor = "red") {
-        this.setRed(this.red + step);
-        this.setGreen(this.green - step);
-        this.setBlue(this.blue - step);
+        this.setRed(r + step);
+        this.setGreen(g - step);
+        this.setBlue(b - step);
 
       } else if (aColor = "green") {
-        this.setRed(this.red - step);
-        this.setGreen(this.green + step);
-        this.setBlue(this.blue - step);
+        this.setRed(r - step);
+        this.setGreen(g + step);
+        this.setBlue(b - step);
 
       } else if (aColor = "blue") {
-        this.setRed(this.red - step);
-        this.setGreen(this.green - step);
-        this.setBlue(this.blue + step);
+        this.setRed(r - step);
+        this.setGreen(g - step);
+        this.setBlue(b + step);
       }
     };
 
@@ -233,9 +247,8 @@
      * description: redraws the color block
      */
     ColorBlock.prototype.redraw = function () {
-      context.clearRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
-      context.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
-      context.fillRect(this.coords[0], this.coords[1], this.dimensions[0], this.dimensions[1]);
+      context.fillStyle = `rgb(${this.colorValues.red}, ${this.colorValues.green}, ${this.colorValues.blue})`;
+      context.fillRect(this.coords.x, this.coords.y, this.dimensions.width, this.dimensions.height);
     }
 
     /*
