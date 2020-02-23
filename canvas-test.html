@@ -43,8 +43,8 @@
         let milliseconds = 200;
 
         startColorShift("green", step);
-        //startRowShift();
         startColumnShift();
+        startRowShift();
 
         function startColorShift(color, step) {
           console.log(`${color} shift begun.`);
@@ -91,15 +91,15 @@
       let y = 0;
 
       for (let i = 0; i < rowMax; i++) {
-        //increment the y coord from 0 to 1000 in steps of 100
+        //increment the y coord from 0 to 1000 in steps equal to height of the color block
         x = 0; //return to left side of canvas
         if (i > 0) {
-          y += 100;
+          y += height;
         };
         for (let j = 0; j < columnMax; j++) {
-          //increment the x coord from 0 to 1000 in steps of 100
+          //increment the x coord from 0 to 1000 in steps equal to the width of the color block
           if (j > 0) {
-            x += 100;
+            x += width;
           };
           fieldOfColor.push(new ColorBlock(getRandomColor(greens), [x, y], [height, width]));
         }
@@ -107,15 +107,18 @@
     }
 
     function shiftColumns(anArray) {
+      let axis = "y";
       anArray.forEach(item => {
-        item.incrementYCoord();
+        item.incrementCoord(item, axis)
         item.redraw();
       });
     }
 
     function shiftRows(anArray) {
+      let axis = "x";
       anArray.forEach(item => {
-        item.incrementXCoord();
+        item.incrementCoord(item, axis);
+        item.redraw();
       });
     }
 
@@ -127,7 +130,7 @@
     }
 
     /*
-     * params: color[3], coords[2], dimensions[2]
+     * params: colorValues[3], coords[2], dimensions[2]
      * response: ColorBlock Object
      * description: ColorBlock constructor.
      */
@@ -183,35 +186,17 @@
     }
 
     /*
-     * params: none
-     * response: increments the x coord by 100
+     * params: ColorBlock, axis "y" or "x"
+     * response: increments the coord by the width of ColorBlock
      * description: causes an apparent shift in colors from
-     * left to right with wrap around.
+     * wrap around.
      */
-    ColorBlock.prototype.incrementXCoord = function () {
-      xCoord = this.coords.x;
-      xCoord = xCoord += 100;
-      if (xCoord > 900) {
-        xCoord = 0;
-      }
-      this.coords.x = xCoord;
-    }
-
-    /*
-     * params: none
-     * response: increments the y coord by 100
-     * description: causes an apparent shift in colors from
-     * top to bottom with wrap around.
-     * @ToDo Duplicate code, so refactor to combine
-     * incrementYCoord with incrementXCoord functions.
-     */
-    ColorBlock.prototype.incrementYCoord = function () {
-      yCoord = this.coords.y;
-      yCoord = yCoord += 100;
-      if (yCoord > 900) {
-        yCoord = 0;
-      }
-      this.coords.y = yCoord;
+    ColorBlock.prototype.incrementCoord = function (item, axis) {
+      let coord = item.coords[axis];
+      coord = axis === "y" ? coord += item.dimensions.height : coord += item.dimensions.width;
+      let constraint = axis === "y" ? canvas.height : canvas.width;
+      coord = coord > (constraint - 100) ? 0 : coord;
+      this.coords[axis] = coord;
     }
 
     /*
