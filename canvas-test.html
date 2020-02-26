@@ -53,6 +53,7 @@
           }, milliseconds);
         }
 
+        //change to handle both row and column shifts. Return the event id
         function startRowShift() {
           console.log("row shift begun.");
           rowShiftID = setInterval(() => {
@@ -105,7 +106,7 @@
         }
       }
     }
-
+    //todo add 'axis' param to the function, and refactor to handle both x and y axis
     function shiftColumns(anArray) {
       let axis = "y";
       anArray.forEach(item => {
@@ -156,13 +157,13 @@
     }
 
     ColorBlock.prototype.setRed = function (value) {
+      if (value > 255) {
+        value = 0;
+      }
+      if (value < 0) {
+        value = 255;
+      }
       this.colorValues.red = value;
-      if (this.colorValues.red > 255) {
-        this.colorValues.red = 0;
-      }
-      if (this.colorValues.red < 0) {
-        this.colorValues.red = 255;
-      }
     }
 
     ColorBlock.prototype.setGreen = function (value) {
@@ -193,7 +194,7 @@
      */
     ColorBlock.prototype.incrementCoord = function (item, axis) {
       let coord = item.coords[axis];
-      coord = axis === "y" ? coord += item.dimensions.height : coord += item.dimensions.width;
+      coord = axis === "y" ? coord + item.dimensions.height : coord + item.dimensions.width;
       let constraint = axis === "y" ? canvas.height : canvas.width;
       coord = coord > (constraint - 100) ? 0 : coord;
       this.coords[axis] = coord;

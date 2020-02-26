@@ -10,35 +10,35 @@
 
   <script>
     let canvas = document.getElementById("myCanvas");
-    let ctx = canvas.getContext("2d");
+    let context = canvas.getContext("2d");
 
     //parameters are x coord, y coord, width, height
     //red rectangle
-    ctx.fillStyle = "#FF0000";
-    ctx.fillRect(0, 0, 150, 80);
+    context.fillStyle = "#FF0000";
+    context.fillRect(0, 0, 150, 80);
 
     //circle
-    ctx.beginPath();
-    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
-    ctx.stroke();
+    context.beginPath();
+    context.arc(95, 50, 40, 0, 2 * Math.PI);
+    context.stroke();
 
     //gradient
-    let grd = ctx.createLinearGradient(0, 0, 150, 0);
+    let grd = context.createLinearGradient(0, 0, 150, 0);
     grd.addColorStop(0, "purple");
     grd.addColorStop(1, "pink");
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 100, 150, 80);
+    context.fillStyle = grd;
+    context.fillRect(0, 100, 150, 80);
 
     //text
-    ctx.font = "30px Arial";
-    ctx.fillText("Hello World!", 0, 220);
+    context.font = "30px Arial";
+    context.fillText("Hello World!", 0, 220);
 
     //using strokeText()
-    ctx.strokeText("Hello World!", 0, 260);
+    context.strokeText("Hello World!", 0, 260);
 
     //center text
-    ctx.textAlign = "Center";
-    ctx.fillText("Hello World!", canvas.width/2, canvas.height/2);
+    context.textAlign = "Center";
+    context.fillText("Hello World!", canvas.width/2, canvas.height/2);
 
   </script>
 </body>
