@@ -40,7 +40,8 @@
 
       function startTimers() {
         let step = getRandomNumber([1, 5]);
-        let milliseconds = 200;
+        let milliseconds = 2000;
+        let colorShiftDelay = 20;
 
         startColorShift("green", step);
         startColumnShift();
@@ -50,7 +51,7 @@
           console.log(`${color} shift begun.`);
           colorShiftID = setInterval(() => {
             shiftColors(fieldOfColor, color, step);
-          }, milliseconds);
+          }, colorShiftDelay);
         }
 
         //change to handle both row and column shifts. Return the event id

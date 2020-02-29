@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <style>
+    @font-face {
+      font-family: 'Mr Dafoe';
+      src: url('../WildAndCrazy/MrDafoe-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      display: block;
+      background-color: #181719;
+      font-family: serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    div {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      position: static;
+      z-index: -1;
+    }
+
+    h1 {
+      color: #770afc;
+      font-family: "Mr Dafoe", serif;
+      font-size: 96px;
+      /* text-shadow: 2px 2px #0cfcf4; */
+      text-shadow: 2px 2px #fff94f;
+    }
+
+    h1,
+    h2 {
+      padding: 0;
+      margin: 0;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    #overlay {
+      position: fixed;
+      display: block;
+      width: 100%;
+      height: 600px;
+      top: 250px;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2;
+    }
+
+    #text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 50px;
+      color: white;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+    }
+
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Mr+Dafoe&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div>
+    <h1>Miami Nights!</h1>
+    <h2>The world's coolest JavaScript Quiz</h2>
+  </div>
+  <div id="overlay">
+    <div id="text">Overlay Text</div>
+  </div>
+
+  <canvas id="theCanvas" width="800" height="780"></canvas>
+
+  <script>
+
+    let canvas = document.getElementById("theCanvas");
+    let context = canvas.getContext("2d");
+    context.globalCompositeOperation = "source-over";
+
+    let grd = context.createLinearGradient(0, 0, 800, 800);
+    grd.addColorStop(0, "#fc0af8");
+    grd.addColorStop(1, "#fff94f");
+    context.fillStyle = grd;
+    context.fillRect(0, 0, 800, 800);
+
+    window.onload = () => {
+      drawImage1();
+    }
+
+    let img;
+
+    function drawImage1() {
+      img = new Image();
+      img.src = "images/palm-tree300x311.png";
+      img.addEventListener("load", drawImage2);
+    }
+
+    function drawImage2() {
+      context.drawImage(img, 0, 500);
+    }
+
+  </script>
+
+</body>
+
+</html>
