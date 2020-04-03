@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Some ideas</title>
+  <style>
+    body {
+      font-size: 16px;
+      padding: 0;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+
+    }
+
+    canvas {
+      z-index: -1;
+    }
+
+    overlay {
+      line-height: 80%;
+      font-size: 2.25em;
+      position: fixed;
+      display: block;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.0);
+      z-index: 2;
+    }
+
+    .top-overlay {
+      top: 10%;
+      left: 65%;
+    }
+
+    .bottom-overlay {
+      font-size: 3.375em;
+      top: 80%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+  </style>
+</head>
+
+<body>
+  <canvas></canvas>
+  <overlay class="top-overlay">
+    <h1>Janet Blohn</h1>
+    <p>experience * passion * ideas</p>
+  </overlay>
+  <overlay class="bottom-overlay">
+    <div style="padding-left: 15%;">Gallery</div>
+    <div style="padding-right: 15%">R&eacute;sum&eacute;</div>
+
+  </overlay>
+
+  <script>
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
+
+    let canvas = document.querySelector("canvas");
+    context = canvas.getContext("2d");
+    canvas.setAttribute("width", screenWidth);
+    canvas.setAttribute("height", screenHeight);
+
+
+    context.rotate(20 * Math.PI / 180); //rotates the canvas 20 degrees. math part is conversion to radians
+
+    //paint left half reddish
+    context.fillStyle = "#dd2d27";
+    context.fillRect(0, 0, Math.floor(screenWidth / 2), screenHeight);
+
+    //paint right half bluish
+    context.fillStyle = "#2d27dd";
+    context.fillRect(Math.floor(screenWidth / 2), 0, screenWidth, screenHeight);
+
+  </script>
+
+</body>
+
+</html>

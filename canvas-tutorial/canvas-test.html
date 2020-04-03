@@ -39,13 +39,13 @@
       startTimers();
 
       function startTimers() {
-        let step = getRandomNumber([1, 5]);
-        let milliseconds = 2000;
+        let step = 1;
+        let milliseconds = 1000;
         let colorShiftDelay = 20;
 
         startColorShift("green", step);
-        startColumnShift();
-        startRowShift();
+        //startColumnShift();
+        //startRowShift();
 
         function startColorShift(color, step) {
           console.log(`${color} shift begun.`);
